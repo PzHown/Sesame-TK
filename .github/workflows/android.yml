@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      BUILD_VERSION: ${{ github.event.inputs.version != '' && github.event.inputs.version || github.ref_name }}
+      BUILD_VERSION: ${{ github.event.inputs.version || github.ref_name }}
 
     steps:
       - name: ⏰ Set Timezone to Asia/Shanghai
