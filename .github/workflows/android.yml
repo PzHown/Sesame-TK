@@ -8,11 +8,18 @@ on:
   #    branches: [ "main" ]
   release:
     types: [ published ]
-#  workflow_dispatch:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Optional version tag (e.g. v1.2.3). If empty, uses branch/ref name.'
+        required: false
+        default: ''
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BUILD_VERSION: ${{ github.event.inputs.version != '' && github.event.inputs.version || github.ref_name }}
 
     steps:
       - name: ⏰ Set Timezone to Asia/Shanghai
@@ -41,7 +48,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 🔥 Build with Gradle
-        run: ./gradlew assembleRelease -Pversion=${{ github.ref_name }}
+        run: ./gradlew assembleRelease -Pversion=${{ env.BUILD_VERSION }}
 
       - name: 📊 Locate APKs and Set Outputs
         id: locate_apks
